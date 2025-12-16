@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de préstamo de libros entre usuarios - Comparte tu biblioteca personal">
+    <title>Biblioteca - Sistema de Préstamo de Libros</title>
+
+    <!-- Fuentes de Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+
+<body>
+    <!-- Contenedor principal de la aplicación -->
+    <div id="app">
+
+        <!-- VISTA: Login y Registro -->
+        <div id="vista-auth" class="vista activa">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h1 class="logo">📚 Biblioteca</h1>
+                        <p class="tagline">Comparte y descubre libros con otros lectores</p>
+                    </div>
+
+                    <!-- Pestañas de Login/Registro -->
+                    <div class="tabs">
+                        <button class="tab activa" data-tab="login">Iniciar Sesión</button>
+                        <button class="tab" data-tab="registro">Registrarse</button>
+                    </div>
+
+                    <!-- Formulario de Login -->
+                    <form id="form-login" class="auth-form activa">
+                        <div class="form-group">
+                            <label for="login-email">Email</label>
+                            <input type="email" id="login-email" required placeholder="tu@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="login-password">Contraseña</label>
+                            <input type="password" id="login-password" required placeholder="••••••••">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+
+                        <p class="hint">💡 Usuario admin: admin@biblioteca.com / admin123</p>
+                    </form>
+
+                    <!-- Formulario de Registro -->
+                    <form id="form-registro" class="auth-form">
+                        <div class="form-group">
+                            <label for="registro-nombre">Nombre</label>
+                            <input type="text" id="registro-nombre" required placeholder="Juan">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registro-apellidos">Apellidos</label>
+                            <input type="text" id="registro-apellidos" required placeholder="García López">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registro-email">Email</label>
+                            <input type="email" id="registro-email" required placeholder="tu@email.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registro-password">Contraseña</label>
+                            <input type="password" id="registro-password" required placeholder="Mínimo 6 caracteres">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block">Crear Cuenta</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA: Aplicación Principal -->
+        <div id="vista-app" class="vista">
+            <!-- Barra de navegación -->
+            <nav class="navbar">
+                <div class="nav-container">
+                    <div class="nav-brand">
+                        <h2>📚 Biblioteca</h2>
+                    </div>
+
+                    <div class="nav-menu">
+                        <button class="nav-link activa" data-seccion="catalogo">Catálogo</button>
+                        <button class="nav-link" data-seccion="mis-libros">Mis Libros</button>
+                        <button class="nav-link" data-seccion="mis-prestamos">Mis Préstamos</button>
+                        <button class="nav-link admin-only" data-seccion="admin" style="display: none;">Admin</button>
+                    </div>
+
+                    <div class="nav-user">
+                        <span id="usuario-nombre" class="user-name"></span>
+                        <button id="btn-logout" class="btn btn-secondary btn-sm">Cerrar Sesión</button>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Contenido principal -->
+            <main class="main-content">
+
+                <!-- SECCIÓN: Catálogo de Libros -->
+                <section id="seccion-catalogo" class="seccion activa">
+                    <div class="section-header">
+                        <h2>📖 Catálogo de Libros</h2>
+                        <p>Explora y pide prestados libros de otros usuarios</p>
+                    </div>
+
+                    <!-- Buscador -->
+                    <div class="search-bar">
+                        <input type="text" id="buscar-input" placeholder="Buscar por título, autor o género...">
+                        <select id="buscar-campo">
+                            <option value="titulo">Título</option>
+                            <option value="autor">Autor</option>
+                            <option value="genero">Género</option>
+                        </select>
+                        <button id="btn-buscar" class="btn btn-primary">Buscar</button>
+                        <button id="btn-limpiar-busqueda" class="btn btn-secondary">Limpiar</button>
+                    </div>
+
+                    <!-- Grid de libros -->
+                    <div id="catalogo-libros" class="libros-grid">
+                        <!-- Los libros se cargarán dinámicamente -->
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: Mis Libros -->
+                <section id="seccion-mis-libros" class="seccion">
+                    <div class="section-header">
+                        <h2>📚 Mis Libros</h2>
+                        <p>Gestiona los libros que has dado de alta</p>
+                    </div>
+
+                    <!-- Botones de acción -->
+                    <div class="action-buttons">
+                        <button id="btn-agregar-libro" class="btn btn-primary">➕ Agregar Libro</button>
+                        <button id="btn-importar-csv" class="btn btn-secondary">📄 Importar CSV</button>
+                    </div>
+
+                    <!-- Grid de mis libros -->
+                    <div id="mis-libros-grid" class="libros-grid">
+                        <!-- Los libros se cargarán dinámicamente -->
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: Mis Préstamos -->
+                <section id="seccion-mis-prestamos" class="seccion">
+                    <div class="section-header">
+                        <h2>🔄 Mis Préstamos</h2>
+                        <p>Libros que has pedido prestados y libros que has prestado</p>
+                    </div>
+
+                    <!-- Pestañas de préstamos -->
+                    <div class="tabs">
+                        <button class="tab activa" data-tab-prestamo="pedidos">Libros Pedidos</button>
+                        <button class="tab" data-tab-prestamo="prestados">Libros Prestados</button>
+                    </div>
+
+                    <!-- Libros pedidos prestados -->
+                    <div id="prestamos-pedidos" class="prestamos-container activa">
+                        <div id="lista-prestamos-pedidos" class="prestamos-lista">
+                            <!-- Los préstamos se cargarán dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Libros prestados a otros -->
+                    <div id="prestamos-prestados" class="prestamos-container">
+                        <div id="lista-prestamos-prestados" class="prestamos-lista">
+                            <!-- Los préstamos se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECCIÓN: Panel de Administración -->
+                <section id="seccion-admin" class="seccion">
+                    <div class="section-header">
+                        <h2>⚙️ Panel de Administración</h2>
+                        <p>Gestión completa del sistema</p>
+                    </div>
+
+                    <!-- Estadísticas -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <h3 id="stat-usuarios">0</h3>
+                                <p>Usuarios</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <div class="stat-info">
+                                <h3 id="stat-libros">0</h3>
+                                <p>Libros</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🔄</div>
+                            <div class="stat-info">
+                                <h3 id="stat-prestamos">0</h3>
+                                <p>Préstamos Activos</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabs de administración -->
+                    <div class="tabs">
+                        <button class="tab activa" data-tab-admin="prestamos">Todos los Préstamos</button>
+                        <button class="tab" data-tab-admin="usuarios">Usuarios</button>
+                    </div>
+
+                    <!-- Todos los préstamos -->
+                    <div id="admin-prestamos" class="admin-container activa">
+                        <div id="admin-lista-prestamos" class="prestamos-lista">
+                            <!-- Los préstamos se cargarán dinámicamente -->
+                        </div>
+                    </div>
+
+                    <!-- Gestión de usuarios -->
+                    <div id="admin-usuarios" class="admin-container">
+                        <div id="admin-lista-usuarios" class="usuarios-lista">
+                            <!-- Los usuarios se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+    </div>
+
+    <!-- MODAL: Agregar/Editar Libro -->
+    <div id="modal-libro" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>➕ Agregar Libro</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="form-libro">
+                <div class="form-group">
+                    <label for="libro-titulo">Título *</label>
+                    <input type="text" id="libro-titulo" required placeholder="El nombre del libro">
+                </div>
+
+                <div class="form-group">
+                    <label for="libro-autor">Autor *</label>
+                    <input type="text" id="libro-autor" required placeholder="Nombre del autor">
+                </div>
+
+                <div class="form-group">
+                    <label for="libro-genero">Género *</label>
+                    <input type="text" id="libro-genero" required placeholder="Ej: Novela, Ciencia ficción, etc.">
+                </div>
+
+                <div class="form-group">
+                    <label for="libro-anio">Año *</label>
+                    <input type="number" id="libro-anio" required placeholder="2024" min="1000">
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="cerrarModalLibro()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: Importar CSV -->
+    <div id="modal-csv" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📄 Importar Libros desde CSV</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>El archivo CSV debe tener el siguiente formato:</p>
+                <code>titulo,autor,genero,año</code>
+                <br><br>
+                <p>Ejemplo: <code>data/ejemplo.csv</code></p>
+
+                <form id="form-csv">
+                    <div class="form-group">
+                        <label for="csv-archivo">Seleccionar archivo CSV</label>
+                        <input type="file" id="csv-archivo" accept=".csv" required>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="cerrarModalCSV()">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Importar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificaciones Toast -->
+    <div id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/libros.js"></script>
+    <script src="js/prestamos.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
