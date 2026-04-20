@@ -92,7 +92,7 @@ function renderizarPrestamosPedidos(prestamos) {
     const contenedor = document.getElementById('lista-prestamos-pedidos');
 
     if (prestamos.length === 0) {
-        mostrarEstadoVacio(contenedor, '📖', 'Sin préstamos activos',
+        mostrarEstadoVacio(contenedor, 'menu_book', 'Sin préstamos activos',
             'No tienes libros pedidos prestados actualmente');
         return;
     }
@@ -106,9 +106,9 @@ function renderizarPrestamosPedidos(prestamos) {
                 <div class="prestamo-info">
                     <h4 class="prestamo-libro">${sanitizarHTML(prestamo.libro_titulo)}</h4>
                     <div class="prestamo-detalles">
-                        <span>📚 ${sanitizarHTML(prestamo.libro_autor)}</span>
-                        <span>👤 Propietario: ${sanitizarHTML(prestamo.propietario_nombre)}</span>
-                        <span>📅 Desde: ${formatearFechaCorta(prestamo.fecha_prestamo)}</span>
+                        <span><span class="material-symbols-outlined">library_books</span> ${sanitizarHTML(prestamo.libro_autor)}</span>
+                        <span><span class="material-symbols-outlined">person</span> Propietario: ${sanitizarHTML(prestamo.propietario_nombre)}</span>
+                        <span><span class="material-symbols-outlined">calendar_today</span> Desde: ${formatearFechaCorta(prestamo.fecha_prestamo)}</span>
                     </div>
                 </div>
                 
@@ -134,7 +134,7 @@ function renderizarPrestamosPrestados(prestamos) {
     const contenedor = document.getElementById('lista-prestamos-prestados');
 
     if (prestamos.length === 0) {
-        mostrarEstadoVacio(contenedor, '📚', 'Sin libros prestados',
+        mostrarEstadoVacio(contenedor, 'library_books', 'Sin libros prestados',
             'No has prestado libros a otros usuarios');
         return;
     }
@@ -148,9 +148,9 @@ function renderizarPrestamosPrestados(prestamos) {
                 <div class="prestamo-info">
                     <h4 class="prestamo-libro">${sanitizarHTML(prestamo.libro_titulo)}</h4>
                     <div class="prestamo-detalles">
-                        <span>📚 ${sanitizarHTML(prestamo.libro_autor)}</span>
-                        <span>👤 Prestado a: ${sanitizarHTML(prestamo.prestatario_nombre)}</span>
-                        <span>📅 Desde: ${formatearFechaCorta(prestamo.fecha_prestamo)}</span>
+                        <span><span class="material-symbols-outlined">library_books</span> ${sanitizarHTML(prestamo.libro_autor)}</span>
+                        <span><span class="material-symbols-outlined">person</span> Prestado a: ${sanitizarHTML(prestamo.prestatario_nombre)}</span>
+                        <span><span class="material-symbols-outlined">calendar_today</span> Desde: ${formatearFechaCorta(prestamo.fecha_prestamo)}</span>
                     </div>
                 </div>
                 
@@ -258,7 +258,7 @@ async function cargarTodosPrestamos() {
         const prestamos = respuesta.data;
 
         if (prestamos.length === 0) {
-            mostrarEstadoVacio(contenedor, '🔄', 'Sin préstamos',
+            mostrarEstadoVacio(contenedor, '<span class="material-symbols-outlined">autorenew</span>', 'Sin préstamos',
                 'No hay préstamos registrados en el sistema');
             return;
         }
@@ -273,10 +273,10 @@ async function cargarTodosPrestamos() {
                     <div class="prestamo-info">
                         <h4 class="prestamo-libro">${sanitizarHTML(prestamo.libro_titulo)}</h4>
                         <div class="prestamo-detalles">
-                            <span>📚 ${sanitizarHTML(prestamo.libro_autor)}</span>
-                            <span>👤 Prestatario: ${sanitizarHTML(prestamo.prestatario_nombre)}</span>
-                            <span>🏠 Propietario: ${sanitizarHTML(prestamo.propietario_nombre)}</span>
-                            <span>📅 Préstamo: ${formatearFechaCorta(prestamo.fecha_prestamo)}</span>
+                            <span><span class="material-symbols-outlined">library_books</span> ${sanitizarHTML(prestamo.libro_autor)}</span>
+                            <span><span class="material-symbols-outlined">person</span> Prestatario: ${sanitizarHTML(prestamo.prestatario_nombre)}</span>
+                            <span><span class="material-symbols-outlined">home</span> Propietario: ${sanitizarHTML(prestamo.propietario_nombre)}</span>
+                            <span><span class="material-symbols-outlined">calendar_today</span> Préstamo: ${formatearFechaCorta(prestamo.fecha_prestamo)}</span>
                             ${!activo ? `<span>✓ Devuelto: ${formatearFechaCorta(prestamo.fecha_devolucion)}</span>` : ''}
                         </div>
                     </div>
@@ -288,7 +288,7 @@ async function cargarTodosPrestamos() {
                                 <span>días</span>
                             </div>
                             <button class="btn btn-warning" onclick="devolverLibro(${prestamo.id})" style="padding: 5px 10px; font-size: 0.9em;">
-                                🔄 Forzar Devolución
+                                <span class="material-symbols-outlined">autorenew</span> Forzar Devolución
                             </button>
                         </div>
                     ` : `
@@ -324,13 +324,13 @@ async function cargarTodosUsuarios() {
                         <h4>${sanitizarHTML(usuario.nombre)} ${sanitizarHTML(usuario.apellidos)}
                             ${esAdminUsuario ? '<span class="libro-badge badge-disponible">Admin</span>' : ''}
                         </h4>
-                        <p>📧 ${sanitizarHTML(usuario.email)}</p>
-                        <p>📅 Registrado: ${formatearFechaCorta(usuario.fecha_registro)}</p>
+                        <p><span class="material-symbols-outlined">email</span> ${sanitizarHTML(usuario.email)}</p>
+                        <p><span class="material-symbols-outlined">calendar_today</span> Registrado: ${formatearFechaCorta(usuario.fecha_registro)}</p>
                     </div>
                     
                     ${!esAdminUsuario && !esUsuarioActual ? `
                         <button class="btn btn-danger" onclick="eliminarUsuario(${usuario.id})">
-                            🗑️ Eliminar
+                            <span class="material-symbols-outlined">delete</span>️ Eliminar
                         </button>
                     ` : ''}
                 </div>

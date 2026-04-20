@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * Inicializar toda la aplicación
  */
 function inicializarApp() {
-    console.log('📚 Iniciando Sistema de Préstamo de Libros...');
+    console.log('library_books Iniciando Sistema de Préstamo de Libros...');
 
     // Inicializar módulos
     inicializarAuth(); // Esto llamará a verificarSesionGuardada() que mostrará la vista correcta

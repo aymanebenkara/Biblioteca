@@ -10,7 +10,9 @@
     <!-- Fuentes de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>.material-symbols-outlined { vertical-align: middle; margin-right: 4px; }</style>
 
     <!-- Script de Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -20,6 +22,14 @@
 </head>
 
 <body>
+    <!-- Fondo dinámico generado por Stitch -->
+    <div class="stitch-background">
+        <div class="stitch-gradient"></div>
+        <img class="stitch-bg-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS3158Tyw9ZU5rOvf3tvj624OCFw00euBGgaTpFzusBw9bP6XJRWjQT5G_hGNUjft5sfPDR6dXHNmgKDJgwwoUktfGbbML-REIxr-w9UF6poPU4W13ekKs2KZdeajNjF9iFMN6eZ0pIx1OScOHDvaa8qoS4F-CDeGUcRsi_tlD_DV_Lv9xuFFcuTgY2ats6dKnesL24P_KdEb3TYOoIYoVLShZxX8AFUeIvxOZdye61WFlyX_63Wy7w-NHZgMnUh2V7SAQ4P8hKQzg" alt="Fondo Biblioteca">
+        <div class="stitch-blob stitch-blob-1"></div>
+        <div class="stitch-blob stitch-blob-2"></div>
+    </div>
+
     <!-- Contenedor principal de la aplicación -->
     <div id="app">
 
@@ -28,7 +38,7 @@
             <div class="auth-container">
                 <div class="auth-card">
                     <div class="auth-header">
-                        <h1 class="logo">📚 Biblioteca</h1>
+                        <h1 class="logo"><span class="material-symbols-outlined">library_books</span> Biblioteca</h1>
                         <p class="tagline">Comparte y descubre libros con otros lectores</p>
                     </div>
 
@@ -71,7 +81,7 @@
                             </div>
                         </div>
 
-                        <p class="hint">💡 Usuario admin: admin@biblioteca.com / admin123</p>
+                        <p class="hint"><span class="material-symbols-outlined" style="font-size: 1.2rem;">lightbulb</span> Usuario admin: admin@biblioteca.com / admin123</p>
                     </form>
 
                     <!-- Formulario de Registro -->
@@ -120,7 +130,7 @@
             <nav class="navbar">
                 <div class="nav-container">
                     <div class="nav-brand">
-                        <h2>📚 Biblioteca</h2>
+                        <h2><span class="material-symbols-outlined">library_books</span> Biblioteca</h2>
                     </div>
 
                     <div class="nav-menu">
@@ -143,7 +153,7 @@
                 <!-- SECCIÓN: Catálogo de Libros -->
                 <section id="seccion-catalogo" class="seccion activa">
                     <div class="section-header">
-                        <h2>📖 Catálogo de Libros</h2>
+                        <h2><span class="material-symbols-outlined">menu_book</span> Catálogo de Libros</h2>
                         <p>Explora y pide prestados libros de otros usuarios</p>
                     </div>
 
@@ -168,14 +178,14 @@
                 <!-- SECCIÓN: Mis Libros -->
                 <section id="seccion-mis-libros" class="seccion">
                     <div class="section-header">
-                        <h2>📚 Mis Libros</h2>
+                        <h2><span class="material-symbols-outlined" style="font-size: 2rem;">book</span> Mis Libros</h2>
                         <p>Gestiona los libros que has dado de alta</p>
                     </div>
 
                     <!-- Botones de acción -->
                     <div class="action-buttons">
-                        <button id="btn-agregar-libro" class="btn btn-primary">➕ Agregar Libro</button>
-                        <button id="btn-importar-csv" class="btn btn-secondary">📄 Importar CSV</button>
+                        <button id="btn-agregar-libro" class="btn btn-primary"><span class="material-symbols-outlined">add</span> Agregar Libro</button>
+                        <button id="btn-importar-csv" class="btn btn-secondary"><span class="material-symbols-outlined">upload_file</span> Importar CSV</button>
                     </div>
 
                     <!-- Grid de mis libros -->
@@ -187,7 +197,7 @@
                 <!-- SECCIÓN: Mis Préstamos -->
                 <section id="seccion-mis-prestamos" class="seccion">
                     <div class="section-header">
-                        <h2>🔄 Mis Préstamos</h2>
+                        <h2><span class="material-symbols-outlined">sync_alt</span> Mis Préstamos</h2>
                         <p>Libros que has pedido prestados y libros que has prestado</p>
                     </div>
 
@@ -215,28 +225,28 @@
                 <!-- SECCIÓN: Panel de Administración -->
                 <section id="seccion-admin" class="seccion">
                     <div class="section-header">
-                        <h2>⚙️ Panel de Administración</h2>
+                        <h2><span class="material-symbols-outlined">admin_panel_settings</span> Panel de Administración</h2>
                         <p>Gestión completa del sistema</p>
                     </div>
 
                     <!-- Estadísticas -->
                     <div class="stats-grid">
                         <div class="stat-card">
-                            <div class="stat-icon">👥</div>
+                            <div class="stat-icon"><span class="material-symbols-outlined" style="font-size: 2rem;">group</span></div>
                             <div class="stat-info">
                                 <h3 id="stat-usuarios">0</h3>
                                 <p>Usuarios</p>
                             </div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon">📚</div>
+                            <div class="stat-icon"><span class="material-symbols-outlined" style="font-size: 2rem;">book</span></div>
                             <div class="stat-info">
                                 <h3 id="stat-libros">0</h3>
                                 <p>Libros</p>
                             </div>
                         </div>
                         <div class="stat-card">
-                            <div class="stat-icon">🔄</div>
+                            <div class="stat-icon"><span class="material-symbols-outlined" style="font-size: 2rem;">autorenew</span></div>
                             <div class="stat-info">
                                 <h3 id="stat-prestamos">0</h3>
                                 <p>Préstamos Activos</p>
@@ -274,7 +284,7 @@
     <div id="modal-libro" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>➕ Agregar Libro</h3>
+                <h3><span class="material-symbols-outlined">add</span> Agregar Libro</h3>
                 <button class="modal-close">&times;</button>
             </div>
             <form id="form-libro">
@@ -310,7 +320,7 @@
     <div id="modal-csv" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>📄 Importar Libros desde CSV</h3>
+                <h3><span class="material-symbols-outlined">description</span> Importar Libros desde CSV</h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">

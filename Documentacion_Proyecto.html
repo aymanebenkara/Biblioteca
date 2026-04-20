@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentación - Proyecto Intermodular</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 2rem; }
+        h1 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 0.5rem; }
+        h2 { color: #2980b9; margin-top: 2rem; }
+        h3 { color: #16a085; }
+        .meta { background-color: #f8f9fa; padding: 1rem; border-radius: 5px; margin-bottom: 2rem; }
+        code { background-color: #f1f1f1; padding: 0.2rem 0.4rem; border-radius: 3px; font-family: monospace; }
+        @media print {
+            body { padding: 0; max-width: 100%; }
+            .no-print { display: none; }
+            h1, h2 { page-break-after: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <button class="no-print" onclick="window.print()" style="float: right; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">🖨️ Guardar como PDF</button>
+
+    <h1>PROYECTO INTERMODULAR: PRESTAMO DE LIBROS</h1>
+    
+    <div class="meta">
+        <p><strong>Integrantes:</strong> Aymane Benkara El Ghani, Diego Zamora, Unai Lopez</p>
+        <p><strong>Curso:</strong> 2025-2026</p>
+        <p><strong>Módulos:</strong> Desarrollo Web en Entorno Servidor / Cliente, Diseño de Interfaces</p>
+    </div>
+
+    <h2>1. Introducción</h2>
+    <h3>a. Objetivo del proyecto</h3>
+    <p>El objetivo principal de este proyecto es desarrollar una aplicación web funcional destinada a personas aficionadas a la lectura que disponen de libros en propiedad y desean compartirlos o prestarlos a otros usuarios sin ningún tipo de motivación económica. La plataforma sirve como un punto de encuentro y gestión para el intercambio cultural, digitalizando el proceso de préstamo tradicional.</p>
+
+    <h3>b. Despliegue de la aplicación</h3>
+    <p>La aplicación está diseñada para ser desplegada en un entorno estándar tipo LAMP/WAMP/XAMPP. Para su despliegue en un entorno local o de producción:</p>
+    <ol>
+        <li>Copiar el directorio <code>Biblioteca</code> en el directorio público del servidor web (ej. <code>htdocs</code> en XAMPP).</li>
+        <li>Crear una base de datos MySQL/MariaDB llamada <code>biblioteca</code>.</li>
+        <li>Importar el script SQL suministrado (<code>sql/biblioteca.sql</code>) para generar las tablas y datos semilla.</li>
+        <li>Configurar las credenciales de base de datos en el archivo <code>php/config/database.php</code> si difieren del estándar (<code>root</code> sin contraseña).</li>
+        <li>Acceder a la aplicación a través del navegador web local (ej. <code>http://localhost/Biblioteca/</code>).</li>
+    </ol>
+
+    <h2>2. Requisitos del proyecto</h2>
+    <h3>a. Requisitos implementados</h3>
+    <p>Se han implementado satisfactoriamente la totalidad de los requisitos básicos exigidos:</p>
+    <ul>
+        <li><strong>Gestión de entidades:</strong> Gestión completa de libros, usuarios y préstamos.</li>
+        <li><strong>Información de libros:</strong> Se almacena título, autor, género, año y adicionalmente, una URL de imagen de portada.</li>
+        <li><strong>Información de usuarios:</strong> Registro con nombre, apellidos, email y contraseña encriptada (bcrypt).</li>
+        <li><strong>Validación y Autenticación:</strong> Acceso restringido mediante validación por email y contraseña. Sólo usuarios registrados pueden operar.</li>
+        <li><strong>Alta de libros:</strong> Formulario de alta para que los usuarios registren sus propios libros.</li>
+        <li><strong>Préstamos:</strong> Sistema para pedir prestados libros disponibles, registrando fecha de inicio y marcando el libro como no disponible. No existe fecha límite de devolución.</li>
+    </ul>
+    <p><strong>Requisitos Extras / Valor Añadido implementados:</strong></p>
+    <ul>
+        <li><strong>Inicio de sesión con Google (SSO):</strong> Integración con <em>Google Identity Services</em> para acceso rápido.</li>
+        <li><strong>Panel de Administración:</strong> Un usuario administrador con privilegios para forzar devoluciones en caso de conflicto.</li>
+        <li><strong>Sistema SPA:</strong> Navegación dinámica sin recargas completas de página utilizando JavaScript y peticiones asíncronas (Fetch API).</li>
+    </ul>
+
+    <h3>b. Requisitos no implementados</h3>
+    <p>No existen requisitos básicos especificados en el documento que hayan quedado sin implementar. El proyecto cumple al 100% con la descripción original.</p>
+
+    <h3>c. Propuestas de mejora</h3>
+    <p>Para futuras versiones de la plataforma se proponen las siguientes mejoras:</p>
+    <ol>
+        <li><strong>Sistema de Valoración (Reviews):</strong> Permitir a los usuarios puntuar y dejar reseñas de los libros leídos.</li>
+        <li><strong>Notificaciones Automáticas:</strong> Envío de correos electrónicos transaccionales cuando alguien solicita un libro o cuando un libro es devuelto.</li>
+        <li><strong>Buscador y Filtros Avanzados:</strong> Filtrado asíncrono por géneros, autores y años en el catálogo principal.</li>
+    </ol>
+
+    <h2>3. Diseño de la aplicación</h2>
+    <h3>a. Arquitectura general del proyecto</h3>
+    <p>El proyecto sigue una arquitectura <strong>Cliente-Servidor (Frontend-Backend)</strong> bien diferenciada:</p>
+    <ul>
+        <li><strong>Frontend (Cliente):</strong> Responsable de la presentación y la interacción del usuario. Construido como una SPA, gestiona el estado en el cliente (usando <code>localStorage</code>) y se comunica con el servidor mediante peticiones HTTP asíncronas.</li>
+        <li><strong>Backend (Servidor):</strong> Desarrollado en PHP bajo un patrón de Endpoints (API REST). Expone rutas que consumen y producen datos en formato JSON.</li>
+        <li><strong>Capa de Datos:</strong> Base de datos relacional MySQL manejada mediante la extensión PDO garantizando seguridad contra Inyecciones SQL.</li>
+    </ul>
+
+    <h3>b. Diseño de la base de datos</h3>
+    <p>El modelo relacional está compuesto por 3 tablas principales:</p>
+    <ol>
+        <li><strong>usuarios:</strong> <code>id</code> (PK), <code>nombre</code>, <code>apellidos</code>, <code>email</code> (UNIQUE), <code>password</code>, <code>es_admin</code>, <code>fecha_registro</code>.</li>
+        <li><strong>libros:</strong> <code>id</code> (PK), <code>titulo</code>, <code>autor</code>, <code>genero</code>, <code>anio</code>, <code>imagen_url</code>, <code>propietario_id</code> (FK), <code>fecha_alta</code>.</li>
+        <li><strong>prestamos:</strong> <code>id</code> (PK), <code>libro_id</code> (FK), <code>prestatario_id</code> (FK), <code>fecha_prestamo</code>, <code>fecha_devolucion</code>.</li>
+    </ol>
+
+    <h3>c. Diseño de la interfaz de usuario</h3>
+    <p>La interfaz sigue un diseño moderno, limpio y responsivo, priorizando la usabilidad:</p>
+    <ul>
+        <li><strong>Tipografía y Colores:</strong> Uso de fuentes legibles (<em>Inter</em>) y una paleta neutra para destacar el contenido.</li>
+        <li><strong>Componentes:</strong> Interfaz basada en tarjetas (Cards) para mostrar la información visualmente.</li>
+        <li><strong>Feedback:</strong> Integración de un sistema de notificaciones emergentes (Toasts) que informan de estado sin interrumpir.</li>
+    </ul>
+
+    <h3>d. Otros diagramas</h3>
+    <p><em>La simplicidad de la arquitectura API REST exime el uso estricto de diagramas complejos en este resumen, priorizándose la claridad semántica de los Endpoints en el apartado 4.b.</em></p>
+
+    <h2>4. Implementación</h2>
+    <h3>a. Tecnologías usadas. Librerías.</h3>
+    <ul>
+        <li><strong>Frontend:</strong> HTML5, CSS3 Vanilla (Flexbox/Grid), Vanilla JavaScript (ES6+).</li>
+        <li><strong>Librerías externas:</strong> <em>Google Identity Services</em> (Botón de Sign-In), <em>Google Fonts</em>. No se han utilizado frameworks pesados para mantener el proyecto ágil.</li>
+        <li><strong>Backend:</strong> PHP 8.x.</li>
+        <li><strong>Base de Datos:</strong> MySQL / MariaDB (extensión <code>PDO</code> nativa de PHP).</li>
+    </ul>
+
+    <h3>b. Endpoints creados: uso</h3>
+    <p>La comunicación Frontend-Backend utiliza JSON en las siguientes rutas (API RESTful):</p>
+    <ul>
+        <li><code>POST /php/auth/login.php</code>: Inicia sesión de PHP.</li>
+        <li><code>POST /php/auth/registro.php</code>: Registra un nuevo usuario.</li>
+        <li><code>POST /php/auth/google.php</code>: Valida Token de Google (SSO).</li>
+        <li><code>GET /php/api/libros.php</code>: Obtiene catálogo de libros.</li>
+        <li><code>POST /php/api/libros.php</code>: Crea nuevo libro.</li>
+        <li><code>DELETE /php/api/libros.php</code>: Elimina un libro.</li>
+        <li><code>GET /php/api/prestamos.php</code>: Historial y estado de préstamos.</li>
+        <li><code>POST /php/api/prestamos.php</code>: Solicitud de préstamo.</li>
+        <li><code>PUT /php/api/prestamos.php</code>: Ejecuta la devolución (modificación).</li>
+    </ul>
+
+    <h2>5. Bibliografía y recursos usados</h2>
+    <ul>
+        <li>Documentación oficial de PHP (https://www.php.net)</li>
+        <li>Guías de Vanilla JavaScript en MDN Web Docs (https://developer.mozilla.org)</li>
+        <li>Documentación de Google Identity Services para Web (https://developers.google.com/identity/gsi/web)</li>
+    </ul>
+
+    <h2>6. ANEXOS (opcional)</h2>
+    <p><strong>Manual de instalación rápida:</strong> Para pruebas de administración, puede usar la cuenta base en el script SQL:</p>
+    <ul>
+        <li><strong>Email:</strong> admin@biblioteca.com</li>
+        <li><strong>Contraseña:</strong> admin123</li>
+    </ul>
+</body>
+</html>

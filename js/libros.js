@@ -43,7 +43,7 @@ async function cargarCatalogo() {
     if (respuesta.success) {
         renderizarLibros(respuesta.data, contenedor, true);
     } else {
-        mostrarEstadoVacio(contenedor, '📚', 'No hay libros', 'Aún no hay libros en el catálogo');
+        mostrarEstadoVacio(contenedor, 'library_books', 'No hay libros', 'Aún no hay libros en el catálogo');
     }
 }
 
@@ -66,7 +66,7 @@ async function buscarLibros() {
 
     if (respuesta.success) {
         if (respuesta.data.length === 0) {
-            mostrarEstadoVacio(contenedor, '🔍', 'Sin resultados',
+            mostrarEstadoVacio(contenedor, 'search', 'Sin resultados',
                 `No se encontraron libros con "${termino}" en ${campo}`);
         } else {
             renderizarLibros(respuesta.data, contenedor, true);
@@ -96,7 +96,7 @@ async function cargarMisLibros() {
 
     if (respuesta.success) {
         if (respuesta.data.length === 0) {
-            mostrarEstadoVacio(contenedor, '📚', 'No tienes libros',
+            mostrarEstadoVacio(contenedor, 'library_books', 'No tienes libros',
                 'Agrega tus primeros libros para compartir');
         } else {
             renderizarLibros(respuesta.data, contenedor, false);
@@ -111,7 +111,7 @@ async function cargarMisLibros() {
  */
 function renderizarLibros(libros, contenedor, mostrarBotonPrestamo) {
     if (libros.length === 0) {
-        mostrarEstadoVacio(contenedor, '📚', 'No hay libros', 'No se encontraron libros');
+        mostrarEstadoVacio(contenedor, 'library_books', 'No hay libros', 'No se encontraron libros');
         return;
     }
 
@@ -149,15 +149,15 @@ function renderizarLibros(libros, contenedor, mostrarBotonPrestamo) {
                     
                     <div class="libro-meta">
                         <span class="libro-meta-item">
-                            <span class="meta-icon">📖</span>
+                            <span class="meta-icon"><span class="material-symbols-outlined">menu_book</span></span>
                             ${sanitizarHTML(libro.genero)}
                         </span>
                         <span class="libro-meta-item">
-                            <span class="meta-icon">📅</span>
+                            <span class="meta-icon"><span class="material-symbols-outlined">calendar_today</span></span>
                             ${libro.anio}
                         </span>
                         <span class="libro-meta-item">
-                            <span class="meta-icon">👤</span>
+                            <span class="meta-icon"><span class="material-symbols-outlined">person</span></span>
                             ${sanitizarHTML(libro.propietario_nombre)}
                         </span>
                     </div>
@@ -171,12 +171,12 @@ function renderizarLibros(libros, contenedor, mostrarBotonPrestamo) {
                     <div class="libro-actions">
                         ${mostrarBotonPrestamo && !esMiLibro && disponible ?
                 `<button class="btn btn-primary btn-block" onclick="pedirPrestado(${libro.id})">
-                                📖 Pedir Prestado
+                                <span class="material-symbols-outlined">menu_book</span> Pedir Prestado
                             </button>` : ''}
                         
                         ${!mostrarBotonPrestamo && esMiLibro ?
                 `<button class="btn btn-danger btn-block" onclick="eliminarLibro(${libro.id})">
-                                🗑️ Eliminar
+                                <span class="material-symbols-outlined">delete</span>️ Eliminar
                             </button>` : ''}
                     </div>
                 </div>

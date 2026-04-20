@@ -14,7 +14,7 @@ function mostrarToast(mensaje, tipo = 'info', duracion = 3000) {
 
     const toast = document.createElement('div');
     toast.className = `toast toast-${tipo}`;
-    toast.textContent = mensaje;
+    toast.innerHTML = mensaje;
 
     container.appendChild(toast);
 
@@ -101,7 +101,7 @@ function sanitizarHTML(texto) {
 function mostrarEstadoVacio(contenedor, icono, titulo, descripcion) {
     contenedor.innerHTML = `
         <div class="empty-state">
-            <div class="empty-state-icon">${icono}</div>
+            <div class="empty-state-icon material-symbols-outlined" style="font-size: 3rem;">${icono}</div>
             <h3>${titulo}</h3>
             <p>${descripcion}</p>
         </div>
@@ -115,7 +115,7 @@ function mostrarEstadoVacio(contenedor, icono, titulo, descripcion) {
 function mostrarLoader(contenedor) {
     contenedor.innerHTML = `
         <div class="empty-state">
-            <div class="empty-state-icon">⏳</div>
+            <div class="empty-state-icon material-symbols-outlined" style="font-size: 3rem;">hourglass_empty</div>
             <h3>Cargando...</h3>
         </div>
     `;
@@ -136,7 +136,7 @@ function confirmar(mensaje) {
         modal.innerHTML = `
             <div class="modal-content" style="max-width: 450px;">
                 <div class="modal-header">
-                    <h3>⚠️ Confirmación</h3>
+                    <h3><span class="material-symbols-outlined">warning</span> Confirmación</h3>
                 </div>
                 <div class="modal-body">
                     <p>${mensaje}</p>
