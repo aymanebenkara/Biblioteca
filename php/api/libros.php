@@ -230,7 +230,9 @@ try {
                         }
 
                         // Buscar portada en Google Books API
-                        $imagenUrl = buscarPortadaGoogleBooks($titulo, $autor);
+                        // IMPORTANTE: Usamos los datos originales (sin sanitizar) para la búsqueda
+                        // porque sanitizar() convierte caracteres como ' en &#039; y rompe la query
+                        $imagenUrl = buscarPortadaGoogleBooks(trim($datos[0]), trim($datos[1]));
 
                         // Insertar libro con portada
                         $query = "INSERT INTO libros (titulo, autor, genero, anio, imagen_url, propietario_id) 
@@ -277,7 +279,9 @@ try {
                 $autor = sanitizar($datos['autor']);
                 $genero = sanitizar($datos['genero']);
                 $anio = intval($datos['anio']);
-                $imagenUrl = isset($datos['imagen_url']) ? sanitizar($datos['imagen_url']) : null;
+                // IMPORTANTE: No usar sanitizar() en URLs porque htmlspecialchars() 
+                // convierte & en &amp; y rompe los parámetros de la URL de Google Books
+                $imagenUrl = isset($datos['imagen_url']) ? validarURLImagen($datos['imagen_url']) : null;
                 $propietarioId = obtenerUsuarioId();
 
                 // Validar año

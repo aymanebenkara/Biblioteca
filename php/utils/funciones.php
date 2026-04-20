@@ -355,3 +355,62 @@ function buscarEnGoogleBooksAPI($query)
 
     return null;
 }
+
+// ============================================
+// FUNCIONES DE VALIDACIÓN DE URLS
+// ============================================
+
+/**
+ * Validar y limpiar URL de imagen
+ * NOTA EDUCATIVA: No usamos sanitizar() (htmlspecialchars) en URLs
+ * porque convierte & en &amp; y rompe los parámetros de la URL.
+ * En su lugar, validamos que sea una URL HTTPS legítima.
+ * 
+ * @param string $url URL a validar
+ * @return string|null URL limpia o null si no es válida
+ */
+function validarURLImagen($url)
+{
+    if (empty($url)) {
+        return null;
+    }
+
+    // Limpiar espacios
+    $url = trim($url);
+
+    // Validar que sea una URL válida con filtro de PHP
+    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+        return null;
+    }
+
+    // Solo permitir HTTPS por seguridad
+    if (strpos($url, 'https://') !== 0) {
+        return null;
+    }
+
+    // Lista blanca de dominios de imágenes permitidos
+    $dominiosPermitidos = [
+        'books.google.com',
+        'lh3.googleusercontent.com',
+        'covers.openlibrary.org',
+        'images-na.ssl-images-amazon.com',
+        'i.gr-assets.com',
+        'googleapis.com'
+    ];
+
+    $host = parse_url($url, PHP_URL_HOST);
+    $dominioValido = false;
+
+    foreach ($dominiosPermitidos as $dominio) {
+        if ($host === $dominio || str_ends_with($host, '.' . $dominio)) {
+            $dominioValido = true;
+            break;
+        }
+    }
+
+    if (!$dominioValido) {
+        return null;
+    }
+
+    return $url;
+}
