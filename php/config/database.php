@@ -44,10 +44,11 @@ class Database {
             // Registrar error (en producción, usar un sistema de logs)
             error_log("Error de conexión a la base de datos: " . $e->getMessage());
             
-            // En desarrollo, mostrar el error
-            if ($_SERVER['SERVER_NAME'] === 'localhost') {
-                echo "Error de conexión: " . $e->getMessage();
-            }
+            // En desarrollo, podemos usar error_log o simplemente devolver null
+            // para evitar romper las respuestas JSON
+            // if ($_SERVER['SERVER_NAME'] === 'localhost') {
+            //     error_log("Error de conexión: " . $e->getMessage());
+            // }
             
             return null;
         }

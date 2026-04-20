@@ -63,14 +63,14 @@ async function cargarMisPrestamos() {
             // - Pedidos: Libros que YO pedí prestados (soy prestatario Y el dueño NO soy yo)
             // - Prestados: Libros MÍOS que presté a OTROS (soy dueño Y el prestatario NO soy yo)
             const pedidos = prestamos.filter(p =>
-                p.prestatario_id === usuarioId &&
-                p.libro_propietario_id !== usuarioId &&
+                Number(p.prestatario_id) === usuarioId &&
+                Number(p.libro_propietario_id) !== usuarioId &&
                 p.activo
             );
 
             const prestados = prestamos.filter(p =>
-                p.libro_propietario_id === usuarioId &&
-                p.prestatario_id !== usuarioId &&
+                Number(p.libro_propietario_id) === usuarioId &&
+                Number(p.prestatario_id) !== usuarioId &&
                 p.activo
             );
 
@@ -282,9 +282,14 @@ async function cargarTodosPrestamos() {
                     </div>
                     
                     ${activo ? `
-                        <div class="prestamo-dias" style="background: ${color}20; color: ${color};">
-                            <span class="dias-numero" style="color: ${color};">${dias}</span>
-                            <span>días</span>
+                        <div style="display: flex; gap: 10px; align-items: center; justify-content: flex-end; margin-top: 10px;">
+                            <div class="prestamo-dias" style="background: ${color}20; color: ${color}; padding: 5px 10px; border-radius: 4px; display: inline-flex; align-items: center; gap: 5px;">
+                                <span class="dias-numero" style="color: ${color}; font-weight: bold;">${dias}</span>
+                                <span>días</span>
+                            </div>
+                            <button class="btn btn-warning" onclick="devolverLibro(${prestamo.id})" style="padding: 5px 10px; font-size: 0.9em;">
+                                🔄 Forzar Devolución
+                            </button>
                         </div>
                     ` : `
                         <span class="libro-badge badge-disponible">Devuelto</span>

@@ -79,6 +79,33 @@ async function manejarLogin(e) {
 }
 
 /**
+ * Manejar login con Google
+ * Esta función es llamada automáticamente por el script de Google
+ */
+window.handleGoogleLogin = async function(response) {
+    if (!response || !response.credential) {
+        mostrarToast('Error de autenticación con Google', 'error');
+        return;
+    }
+
+    // Mostrar loader o toast de info
+    mostrarToast('Iniciando sesión con Google...', 'info');
+
+    const respuesta = await AuthAPI.loginGoogle(response.credential);
+
+    if (respuesta.success) {
+        usuarioActual = respuesta.data;
+        guardarSesion(usuarioActual);
+        mostrarToast('¡Bienvenido! ' + usuarioActual.nombre, 'success');
+        mostrarVistaApp();
+    } else {
+        mostrarToast(respuesta.mensaje || 'Error al iniciar sesión con Google', 'error');
+    }
+};
+
+
+
+/**
  * Manejar registro
  */
 async function manejarRegistro(e) {
@@ -174,7 +201,13 @@ function mostrarVistaApp() {
     }
 
     // Restaurar sección guardada o cargar catálogo por defecto
-    const seccionGuardada = localStorage.getItem('seccionActiva') || 'catalogo';
+    let seccionGuardada = localStorage.getItem('seccionActiva') || 'catalogo';
+    
+    // Si intenta acceder a admin y no es admin, redirigir a catálogo
+    if (seccionGuardada === 'admin' && !usuarioActual.es_admin) {
+        seccionGuardada = 'catalogo';
+    }
+    
     cambiarSeccion(seccionGuardada);
 }
 
@@ -186,10 +219,10 @@ function esAdmin() {
 }
 
 /**
- * Obtener ID del usuario actual
+ * Obtener ID del usuario actual (siempre como Número)
  */
 function obtenerUsuarioId() {
-    return usuarioActual ? usuarioActual.id : null;
+    return usuarioActual ? Number(usuarioActual.id) : null;
 }
 
 /**
@@ -211,6 +244,7 @@ function limpiarSesion() {
     try {
         localStorage.removeItem('biblioteca_usuario');
         localStorage.removeItem('biblioteca_sesion_activa');
+        localStorage.removeItem('seccionActiva');
     } catch (error) {
         console.error('Error al limpiar sesión:', error);
     }

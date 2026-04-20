@@ -18,6 +18,7 @@ async function peticionAPI(endpoint, opciones = {}) {
 
         const config = {
             ...opciones,
+            credentials: 'include', // Garantizar que se envíen las cookies de sesión (PHPSESSID)
             headers: {
                 'Content-Type': 'application/json',
                 ...opciones.headers
@@ -61,6 +62,18 @@ const AuthAPI = {
             body: JSON.stringify({ email, password })
         });
     },
+
+    /**
+     * Iniciar sesión con Google
+     */
+    async loginGoogle(credential) {
+        return await peticionAPI('auth/google.php', {
+            method: 'POST',
+            body: JSON.stringify({ credential })
+        });
+    },
+
+
 
     /**
      * Cerrar sesión

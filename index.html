@@ -12,6 +12,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- Script de Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <!-- Estilos -->
     <link rel="stylesheet" href="css/estilos.css">
 </head>
@@ -49,6 +52,25 @@
 
                         <button type="submit" class="btn btn-primary btn-block">Entrar</button>
 
+                        <!-- Botón de Google Sign-In -->
+                        <div class="google-login-container" style="margin-top: 15px; text-align: center;">
+                            <div id="g_id_onload"
+                                data-client_id="600684231666-3o4l2ies6qqejc7v6po6tff969pbrebu.apps.googleusercontent.com"
+                                data-context="signin"
+                                data-ux_mode="popup"
+                                data-callback="handleGoogleLogin"
+                                data-auto_prompt="false">
+                            </div>
+                            <div class="g_id_signin"
+                                data-type="standard"
+                                data-shape="rectangular"
+                                data-theme="outline"
+                                data-text="signin_with"
+                                data-size="large"
+                                data-logo_alignment="left">
+                            </div>
+                        </div>
+
                         <p class="hint">💡 Usuario admin: admin@biblioteca.com / admin123</p>
                     </form>
 
@@ -75,6 +97,18 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-block">Crear Cuenta</button>
+
+                        <!-- Botón de Google Sign-In (Registro) -->
+                        <div class="google-login-container" style="margin-top: 15px; text-align: center;">
+                            <div class="g_id_signin"
+                                data-type="standard"
+                                data-shape="rectangular"
+                                data-theme="outline"
+                                data-text="signup_with"
+                                data-size="large"
+                                data-logo_alignment="left">
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -304,12 +338,12 @@
     <div id="toast-container"></div>
 
     <!-- Scripts -->
-    <script src="js/utils.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/libros.js"></script>
-    <script src="js/prestamos.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/utils.js?v=2"></script>
+    <script src="js/api.js?v=2"></script>
+    <script src="js/auth.js?v=2"></script>
+    <script src="js/libros.js?v=2"></script>
+    <script src="js/prestamos.js?v=2"></script>
+    <script src="js/app.js?v=2"></script>
 </body>
 
 </html>

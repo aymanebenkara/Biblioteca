@@ -127,8 +127,10 @@ function renderizarLibros(libros, contenedor, mostrarBotonPrestamo) {
         </svg>
     `);
 
+    const currentUserId = obtenerUsuarioId();
+
     contenedor.innerHTML = libros.map(libro => {
-        const esMiLibro = libro.propietario_id === obtenerUsuarioId();
+        const esMiLibro = Number(libro.propietario_id) === currentUserId;
         const disponible = libro.disponible;
         const imagenUrl = libro.imagen_url || placeholderUrl;
 

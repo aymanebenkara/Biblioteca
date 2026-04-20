@@ -51,7 +51,7 @@ try {
                 requerirAutenticacion();
 
                 $usuarioId = intval($_GET['usuario']);
-                $usuarioActualId = obtenerUsuarioId();
+                $usuarioActualId = intval(obtenerUsuarioId());
 
                 // Solo admin o el mismo usuario pueden ver sus préstamos
                 if (!esAdmin() && $usuarioId !== $usuarioActualId) {
@@ -246,11 +246,13 @@ try {
 
             $prestamo = $stmt->fetch();
 
-            // Solo el prestatario o el propietario pueden devolver el libro
+            $esAdmin = isset($_SESSION['es_admin']) && $_SESSION['es_admin'] == 1;
+
+            // Solo el prestatario, el propietario o un ADMIN pueden devolver el libro
             if (
                 $prestamo['prestatario_id'] !== $usuarioId &&
                 $prestamo['propietario_id'] !== $usuarioId &&
-                !esAdmin()
+                !$esAdmin
             ) {
                 enviarRespuesta(false, null, 'No tienes permiso para devolver este libro.', 403);
             }
