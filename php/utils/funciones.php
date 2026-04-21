@@ -287,9 +287,9 @@ function registrarLog($mensaje)
 // ============================================
 
 /**
- * Buscar portada de libro en Google Books API
+ * Buscar portada de libro en APIs (OpenLibrary y Google Books)
  * NOTA EDUCATIVA: Esta función busca la imagen de portada de un libro
- * usando la API gratuita de Google Books
+ * usando APIs gratuitas
  * 
  * @param string $titulo Título del libro
  * @param string $autor Autor del libro
@@ -297,23 +297,60 @@ function registrarLog($mensaje)
  */
 function buscarPortadaGoogleBooks($titulo, $autor)
 {
-    // Estrategia 1: Búsqueda exacta con título y autor
+    // Estrategia 1: Búsqueda en OpenLibrary (título y autor)
+    $query = urlencode($titulo . ' ' . $autor);
+    $imagenUrl = buscarEnOpenLibraryAPI($query);
+    if ($imagenUrl) {
+        return $imagenUrl;
+    }
+
+    // Estrategia 2: Búsqueda en OpenLibrary (solo título)
+    $query = urlencode($titulo);
+    $imagenUrl = buscarEnOpenLibraryAPI($query);
+    if ($imagenUrl) {
+        return $imagenUrl;
+    }
+
+    // Estrategia 3: Fallback a Google Books (puede fallar por cuota)
     $query = 'intitle:' . urlencode($titulo) . '+inauthor:' . urlencode($autor);
     $imagenUrl = buscarEnGoogleBooksAPI($query);
-    if ($imagenUrl)
-        return $imagenUrl;
-
-    // Estrategia 2: Solo título
-    $query = 'intitle:' . urlencode($titulo);
-    $imagenUrl = buscarEnGoogleBooksAPI($query);
-    if ($imagenUrl)
-        return $imagenUrl;
-
-    // Estrategia 3: Búsqueda general
-    $query = urlencode($titulo . ' ' . $autor);
-    $imagenUrl = buscarEnGoogleBooksAPI($query);
-
+    
     return $imagenUrl;
+}
+
+/**
+ * Función auxiliar para consultar OpenLibrary API
+ * 
+ * @param string $query Query de búsqueda
+ * @return string|null URL de la imagen o null
+ */
+function buscarEnOpenLibraryAPI($query)
+{
+    $url = "https://openlibrary.org/search.json?q={$query}&limit=1";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'BibliotecaApp/1.0');
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    // curl_close is no longer required in PHP 8+ and can cause deprecation notices
+
+    if ($httpCode !== 200 || !$response) {
+        return null;
+    }
+
+    $data = json_decode($response, true);
+
+    if (isset($data['docs'][0]['cover_i'])) {
+        $coverId = $data['docs'][0]['cover_i'];
+        return "https://covers.openlibrary.org/b/id/{$coverId}-L.jpg";
+    }
+
+    return null;
 }
 
 /**
@@ -335,7 +372,7 @@ function buscarEnGoogleBooksAPI($query)
 
     $response = curl_exec($ch);
     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
+    // curl_close is no longer required in PHP 8+ and can cause deprecation notices
 
     if ($httpCode !== 200 || !$response) {
         return null;

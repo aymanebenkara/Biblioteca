@@ -195,25 +195,25 @@ const LibrosAPI = {
     },
 
     /**
-     * Buscar portada de libro en Google Books API con múltiples estrategias
+     * Buscar portada de libro en APIs (OpenLibrary y Google Books) con múltiples estrategias
      */
     async buscarPortada(titulo, autor) {
         try {
             // Estrategia 1: Búsqueda exacta con título y autor
-            let query = `intitle:${encodeURIComponent(titulo)}+inauthor:${encodeURIComponent(autor)}`;
-            let imagenUrl = await this._buscarEnGoogleBooks(query);
+            let query = `title:${encodeURIComponent(titulo)} author:${encodeURIComponent(autor)}`;
+            let imagenUrl = await this._buscarPortadaAPI(query);
 
             if (imagenUrl) return imagenUrl;
 
             // Estrategia 2: Solo título (para casos donde el autor no coincide exactamente)
-            query = `intitle:${encodeURIComponent(titulo)}`;
-            imagenUrl = await this._buscarEnGoogleBooks(query);
+            query = `title:${encodeURIComponent(titulo)}`;
+            imagenUrl = await this._buscarPortadaAPI(query);
 
             if (imagenUrl) return imagenUrl;
 
             // Estrategia 3: Búsqueda general (título + autor sin restricciones)
             query = encodeURIComponent(`${titulo} ${autor}`);
-            imagenUrl = await this._buscarEnGoogleBooks(query);
+            imagenUrl = await this._buscarPortadaAPI(query);
 
             return imagenUrl;
         } catch (error) {
@@ -223,30 +223,39 @@ const LibrosAPI = {
     },
 
     /**
-     * Función auxiliar para buscar en Google Books API
+     * Función auxiliar para buscar en APIs de libros
      */
-    async _buscarEnGoogleBooks(query) {
+    async _buscarPortadaAPI(query) {
         try {
-            const url = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=1`;
-            const respuesta = await fetch(url);
-            const datos = await respuesta.json();
+            // Intentar con OpenLibrary primero (es libre y no requiere API key)
+            const openLibraryUrl = `https://openlibrary.org/search.json?q=${query}&limit=1`;
+            const respuestaOL = await fetch(openLibraryUrl);
+            const datosOL = await respuestaOL.json();
 
-            if (datos.items && datos.items.length > 0) {
-                const libro = datos.items[0];
+            if (datosOL.docs && datosOL.docs.length > 0) {
+                const libroOL = datosOL.docs[0];
+                if (libroOL.cover_i) {
+                    return `https://covers.openlibrary.org/b/id/${libroOL.cover_i}-L.jpg`;
+                }
+            }
 
-                if (libro.volumeInfo.imageLinks) {
-                    // Preferir thumbnail sobre smallThumbnail
-                    const imagenUrl = libro.volumeInfo.imageLinks.thumbnail ||
-                        libro.volumeInfo.imageLinks.smallThumbnail;
+            // Fallback: Google Books API (limitado)
+            const googleUrl = `https://www.googleapis.com/books/v1/volumes?q=${query}&maxResults=1`;
+            const respuestaGB = await fetch(googleUrl);
+            const datosGB = await respuestaGB.json();
 
-                    // Convertir a HTTPS si es necesario
+            if (datosGB.items && datosGB.items.length > 0) {
+                const libroGB = datosGB.items[0];
+                if (libroGB.volumeInfo && libroGB.volumeInfo.imageLinks) {
+                    const imagenUrl = libroGB.volumeInfo.imageLinks.thumbnail || 
+                                      libroGB.volumeInfo.imageLinks.smallThumbnail;
                     return imagenUrl ? imagenUrl.replace('http:', 'https:') : null;
                 }
             }
 
             return null;
         } catch (error) {
-            console.error('Error en búsqueda de Google Books:', error);
+            console.error('Error en búsqueda de portadas:', error);
             return null;
         }
     }
